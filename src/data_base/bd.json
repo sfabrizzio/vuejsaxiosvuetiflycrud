@@ -1,0 +1,16 @@
+{
+    "frameworks": [
+      {
+        "id": 1,
+        "name": "React"
+      },
+      {
+        "id": 2,
+        "name": "Vuejs"
+      },
+      {
+        "id": 3,
+        "name": "Angular"
+      }
+    ]
+  }
