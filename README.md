@@ -32,7 +32,7 @@ para Obtener una API REST falsa completa sin codificación
 # http://localhost:3000/frameworks
 ### Compiles and minifies for production
 ```
-
+despues ejecutar con npm run serve , en otro terminal
 ![image](https://user-images.githubusercontent.com/15172436/149638363-1a90681b-c22f-4e63-8a2d-967ca1199dfc.png)
 
 npm run build
