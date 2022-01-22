@@ -1,4 +1,5 @@
-# VUEJS con  VUETIFLY utilizando axios . CRUD 
+# VUEJS con  VUETIFLY utilizando axios con json-server
+ CRUD - gestion de datos
 
 ## Project setup
 ```
