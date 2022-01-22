@@ -1,8 +1,8 @@
 {
   "frameworks": [
     {
-      "name": "React21",
-      "id": 1
+      "id": 1,
+      "name": "React"
     },
     {
       "id": 2,
@@ -19,18 +19,6 @@
     {
       "name": "66565",
       "id": 5
-    },
-    {
-      "name": "coquito",
-      "id": 6
-    },
-    {
-      "name": "kuytt",
-      "id": 7
-    },
-    {
-      "name": "Reactivo",
-      "id": 10
     }
   ]
 }

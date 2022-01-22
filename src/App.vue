@@ -51,6 +51,9 @@
           flat
         >
           <v-toolbar-title>DATOS  2022</v-toolbar-title>
+          <v-spacer></v-spacer>
+           <v-spacer></v-spacer>
+          <v-text-field v-model="title" append-icon="mdi-magnify" label="Search" ></v-text-field>
           <v-divider
             class="mx-4"
             inset
@@ -87,7 +90,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.name"
-                        label="Dessert name"
+                        label="Framework"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -147,17 +150,17 @@
                   text
                   @click="save"
                 >
-                  Save
+                  Grabar
                 </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+              <v-card-title class="text-h5">Are you sure you want to Borrar this item?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="closeDelete">Cancela</v-btn>
                 <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
@@ -208,44 +211,50 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+
 import EventService from "@/services/TutorialService.js";
+import TutorialService from './services/TutorialService';
 export default {
   name: 'App',
 
-  components: {
-    HelloWorld,
-  },
+  
 
    data() {
     return {
        dialog: false,
     dialogDelete: false,
      editedIndex: -1,
+      frameworks2: [],
+       tutorials: [],
+     
+         loading: true,
+                
+
+     title:'',
+     headers: [
+            { text: 'Còdigo', value: 'id' },
+            { text: 'Nombre', value: 'name' },
+             { text: 'Actions', value: 'actions', sortable: false },
+            ],
     editedItem: {
-      name: '',
+  id:0,
+     title: '  ',
       calories: 0,
       fat: 0,
       carbs: 0,
       protein: 0,
     },
     defaultItem: {
+      id:0,
       name: '',
+      title:'',
       calories: 0,
       fat: 0,
       carbs: 0,
       protein: 0,
     },
   
-      frameworks2: [],
-       tutorials: [],
-         loading: true,
-                     headers: [
-            { text: 'Còdigo', value: 'id' },
-            { text: 'Nombre', value: 'name' },
-             { text: 'Actions', value: 'actions', sortable: false },
-            ]
-
+     
     };
   },
   computed: {
@@ -267,6 +276,7 @@ methods : {
     this.dialog=false;
   },
  */
+ 
    getDisplayTutorial(tutorial) {
     return {
       id:tutorial.id,
@@ -280,6 +290,7 @@ methods : {
     EventService.getAll()
 .then((response)=>{
   this.frameworks2=response.data.map(this.getDisplayTutorial) ;
+  
      /* console.log(this.frameworks2).map(this.getDisplayTutorial) ; */
 }) 
 .catch( e=>{
@@ -290,7 +301,7 @@ methods : {
  
     editItem (item) {
 
-     
+         
       this.editedIndex = this.frameworks2.indexOf(item)
     
       this.editedItem = Object.assign({}, item)
@@ -305,16 +316,28 @@ methods : {
     },
 
     deleteItemConfirm () {
-      this.frameworks2.splice(this.editedIndex, 1)
-      this.closeDelete()
+      /*Eliminar Item */
+     this.deleteTutorial(this.editedItem.id)
+     .then(() =>  this.retrieveTutorials()).catch(e => console.log(e));
+      
+    /*  this.frameworks2.splice(this.editedIndex, 1)
+      this.closeDelete()*/
     },
+ deleteTutorial(id) {
+      TutorialService.delete(id)
+     .then(() =>  this.retrieveTutorials())
+     .catch(e => console.log(e));
+
+      },
+  
+
 
     close () {
       this.dialog = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
-      })
+      }) 
     },
 
     closeDelete () {
@@ -322,17 +345,34 @@ methods : {
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
-      })
+      }) 
     },
 
     save () {
+      let item=this.editedItem;
+ 
+      let dto={name:item.name};
+/* Los DTO son un tipo de objetos que sirven únicamente para transportar datos. EL DTO contiene las propiedades*/
       if (this.editedIndex > -1) {
-        Object.assign(this.frameworks2[this.editedIndex], this.editedItem)
-      } else {
-        this.frameworks2.push(this.editedItem)
+        dto.id=item.id;
+        
+/*         alert("editar")
+        Object.assign(this.frameworks2[this.editedIndex], this.editedItem) */
+
+TutorialService.update(item.id,dto).then (() =>  this.retrieveTutorials()).catch(e => console.log(e));
+
+      } else   TutorialService.create(dto)
+      .then(() =>  this.retrieveTutorials()).catch(e => console.log(e))
+      
+      ;
+        /* nuevo registro*/
+      
+      
+        
+        /*this.frameworks2.push(this.editedItem)*/
       }
-      this.close()
-    }},
+      /*this.close()*/
+    },
   
    mounted() {
     this.retrieveTutorials();
